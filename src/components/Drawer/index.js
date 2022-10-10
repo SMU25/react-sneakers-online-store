@@ -22,7 +22,7 @@ function Drawer({ onClose, onRemove, items = [], opened }) {
     try {
       setIsLoading(true);
       const { data } = await axios.post(
-        "https://61de0dabf60e8f0017668ba7.mockapi.io/orders",
+        "https://6342eb673f83935a784c66f4.mockapi.io/orders",
         { items: cartItems }
       );
 
@@ -33,7 +33,7 @@ function Drawer({ onClose, onRemove, items = [], opened }) {
       for (let i = 0; i < cartItems.length; i++) {
         const item = cartItems[i];
         axios.delete(
-          "https://61de0dabf60e8f0017668ba7.mockapi.io/cart/" + item.id
+          "https://6342eb673f83935a784c66f4.mockapi.io/cart/" + item.id
         );
         await delay(1000);
       }

@@ -11,7 +11,7 @@ function Orders() {
     (async () => {
       try {
         const { data } = await axios.get(
-          "https://61de0dabf60e8f0017668ba7.mockapi.io/orders"
+          "https://6342eb673f83935a784c66f4.mockapi.io/orders"
         );
         // console.log(data.map((obj) => obj.items).flat());
         // console.log(data.reduce((prev, obj) => [...prev, ...obj.items], []));
