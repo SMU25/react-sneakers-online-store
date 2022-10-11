@@ -33,7 +33,7 @@ function App() {
         setItems(itemsResponse.data);
       } catch (error) {
         console.error(error);
-        alert("Ошибка при запросе данных ;(");
+        alert("Помилка при запиті данних;(");
       }
     }
 
@@ -66,7 +66,7 @@ function App() {
         );
       }
     } catch (error) {
-      alert("Ошибка при добавлении в корзину");
+      alert("Помилка при додаванні в кошик!");
       console.error(error);
     }
   };
@@ -78,7 +78,7 @@ function App() {
         prev.filter((item) => Number(item.id) !== Number(id))
       );
     } catch (error) {
-      alert("Ошибка при удалении из корзины");
+      alert("Помилка при видаленні з кошика!");
       console.error(error);
     }
   };
@@ -98,7 +98,7 @@ function App() {
         setFavorites((prev) => [...prev, data]);
       }
     } catch (error) {
-      alert("Не удалось добавить в фавориты");
+      alert("Не вдалося додати в улюблені товари!");
       console.error(error);
     }
   };

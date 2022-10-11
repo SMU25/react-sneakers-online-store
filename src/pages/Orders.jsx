@@ -16,7 +16,7 @@ const Orders = () => {
         setOrders(data.reduce((prev, obj) => [...prev, ...obj.items], []));
         setIsLoading(false);
       } catch (error) {
-        alert("Ошибка при запросе заказов");
+        alert("Помилка при запиті замовлень");
         console.error(error);
       }
     })();
@@ -25,7 +25,7 @@ const Orders = () => {
   return (
     <div className="content p-40">
       <div className="d-flex align-center justify-between mb-40">
-        <h1>Мои заказы</h1>
+        <h1>Мої замовлення</h1>
       </div>
 
       <div className="d-flex flex-wrap">

@@ -57,8 +57,8 @@ export const Card = ({
           <h5>{title}</h5>
           <div className="d-flex justify-between align-center">
             <div className="d-flex flex-column">
-              <span>Цена:</span>
-              <b>{price} руб.</b>
+              <span>Ціна:</span>
+              <b>{price} грн.</b>
             </div>
             {onPlus && (
               <img

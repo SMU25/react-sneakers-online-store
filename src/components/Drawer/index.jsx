@@ -29,7 +29,7 @@ export const Drawer = ({ onClose, onRemove, items = [], opened }) => {
       });
     } catch (error) {
       console.log(error);
-      alert("Ошибка при создании заказа :(");
+      alert("Помилка при створенні замовлення :(");
     }
     setIsLoading(false);
   };
@@ -38,18 +38,18 @@ export const Drawer = ({ onClose, onRemove, items = [], opened }) => {
     <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ""}`}>
       <div className={styles.drawer}>
         <h2 className="d-flex justify-between mb-30">
-          Корзина{" "}
+          Кошик{" "}
           <img
             onClick={onClose}
             className="cu-p"
             src="img/btn-remove.svg"
-            alt="Close"
+            alt="Закрити"
           />
         </h2>
 
         {items.length > 0 ? (
           <div className="d-flex flex-column flex">
-            <div className="items flex">
+            <div className={"items flex " + styles.containerItems}>
               {items.map((obj) => (
                 <div
                   key={obj.id}
@@ -62,7 +62,7 @@ export const Drawer = ({ onClose, onRemove, items = [], opened }) => {
 
                   <div className="mr-20 flex">
                     <p className="mb-5">{obj.title}</p>
-                    <b>{obj.price} руб.</b>
+                    <b>{obj.price} грн.</b>
                   </div>
                   <img
                     onClick={() => onRemove(obj.id)}
@@ -76,14 +76,14 @@ export const Drawer = ({ onClose, onRemove, items = [], opened }) => {
             <div className="cartTotalBlock">
               <ul>
                 <li>
-                  <span>Итого:</span>
-                  <div></div>
-                  <b>{totalPrice} руб. </b>
+                  <span>Всього:</span>
+                  <div />
+                  <b>{totalPrice} грн. </b>
                 </li>
                 <li>
-                  <span>Налог 5%:</span>
+                  <span>Податок 20%:</span>
                   <div></div>
-                  <b>{(totalPrice / 100) * 5} руб. </b>
+                  <b>{(totalPrice / 100) * 20} грн. </b>
                 </li>
               </ul>
               <button
@@ -91,17 +91,17 @@ export const Drawer = ({ onClose, onRemove, items = [], opened }) => {
                 onClick={onClickOrder}
                 className="greenButton"
               >
-                Оформить заказ <img src="img/arrow.svg" alt="Arrow" />
+                Підтвердити замолвення! <img src="img/arrow.svg" alt="Arrow" />
               </button>
             </div>
           </div>
         ) : (
           <Info
-            title={isOrderComplete ? "Заказ оформлен!" : "Корзина пустая"}
+            title={isOrderComplete ? "Замовлення оформлене!" : "Кошик пустий"}
             description={
               isOrderComplete
-                ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке`
-                : "Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ."
+                ? `Дякуємо. Ваше замовлення #${orderId} найближчим часом буде передано до кур'єрської служби доставки.`
+                : "Додайте хоча б одну (1) пару кросівок, щоб зробити замовлення! "
             }
             image={
               isOrderComplete ? "img/complete-order.jpg" : "img/empty-cart.jpg"

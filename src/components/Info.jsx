@@ -11,7 +11,7 @@ export const Info = ({ title, image, description }) => {
       <p className="opacity-6">{description}</p>
       <button onClick={() => setCartOpened(false)} className="greenButton">
         <img src="img/arrow.svg" alt="Arrow" />
-        Вернуться назад
+        <span>Повернутися назад</span>
       </button>
     </div>
   );

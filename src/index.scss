@@ -3,10 +3,25 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #e7f6ff;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+    height: 0;
+    background-color: #e7e7e7;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #474747;
+    border-radius: 10px;
+    box-shadow: inset 1px 1px 10px #474747;
+    &:hover {
+      background-color: #fff;
+    }
+  }
 }
 
 * {
-  font-family: 'Inter', system-ui;
+  font-family: "Inter", system-ui;
 }
 
 .wrapper {

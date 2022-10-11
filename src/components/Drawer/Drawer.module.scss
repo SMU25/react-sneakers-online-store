@@ -1,5 +1,5 @@
 .overlay {
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   width: 100%;
@@ -9,7 +9,6 @@
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.1s ease-out, visibility 0.1s ease-out;
-  overflow: hidden;
 }
 
 .overlayVisible {
@@ -42,5 +41,26 @@
 
   h2 {
     margin: 0;
+  }
+}
+
+.containerItems {
+  max-height: 70vh;
+  overflow: auto;
+  padding: 0 10px 0 0;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 0;
+    background-color: #e7e7e7;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #474747;
+    border-radius: 10px;
+    box-shadow: inset 1px 1px 10px #474747;
+    &:hover {
+      background-color: #fff;
+    }
   }
 }
