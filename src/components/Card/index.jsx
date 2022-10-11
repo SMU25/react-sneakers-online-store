@@ -1,11 +1,9 @@
 import React from "react";
 import ContentLoader from "react-content-loader";
-
-import AppContext from "../../context";
-
+import { AppContext } from "context";
 import styles from "./Card.module.scss";
 
-function Card({
+export const Card = ({
   id,
   title,
   imageUrl,
@@ -14,7 +12,7 @@ function Card({
   onPlus,
   favorited,
   loading = false,
-}) {
+}) => {
   const { isItemAdded } = React.useContext(AppContext);
   const [isFavorite, setIsFavorite] = React.useState(favorited);
   const obj = { id, parentId: id, title, imageUrl, price };
@@ -77,6 +75,4 @@ function Card({
       )}
     </div>
   );
-}
-
-export default Card;
+};

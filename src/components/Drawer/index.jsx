@@ -1,20 +1,17 @@
 import React from "react";
 import axios from "axios";
-
-import Info from "../Info";
-import { useCart } from "../../hooks/useCart";
-
+import { Info } from "components/Info";
+import { useCart } from "hooks/useCart";
+import { API_URL_CART, API_URL_ORDERS } from "constants/urls";
 import styles from "./Drawer.module.scss";
-import { API_URL_CART, API_URL_ORDERS } from "../../constants/urls";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-function Drawer({ onClose, onRemove, items = [], opened }) {
+export const Drawer = ({ onClose, onRemove, items = [], opened }) => {
   const { cartItems, setCartItems, totalPrice } = useCart();
   const [orderId, setOrderId] = React.useState(null);
   const [isOrderComplete, setIsOrderComplete] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-  console.log(cartItems);
 
   const onClickOrder = async () => {
     try {
@@ -114,6 +111,4 @@ function Drawer({ onClose, onRemove, items = [], opened }) {
       </div>
     </div>
   );
-}
-
-export default Drawer;
+};

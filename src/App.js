@@ -1,18 +1,13 @@
 import React from "react";
-import { Route, Routes } from "react-router";
 import axios from "axios";
-import Header from "./components/Header";
-import Drawer from "./components/Drawer";
-import AppContext from "./context";
-
-import Home from "./pages/Home";
-import Favorites from "./pages/Favorites";
-import Orders from "./pages/Orders";
-import {
-  API_URL_CART,
-  API_URL_FAVORITES,
-  API_URL_ITEMS,
-} from "./constants/urls";
+import { Route, Routes } from "react-router";
+import Home from "pages/Home";
+import Favorites from "pages/Favorites";
+import Orders from "pages/Orders";
+import { Header } from "components/Header";
+import { Drawer } from "components/Drawer";
+import { AppContext } from "context";
+import { API_URL_CART, API_URL_FAVORITES, API_URL_ITEMS } from "constants/urls";
 
 function App() {
   const [items, setItems] = React.useState([]);
@@ -37,8 +32,8 @@ function App() {
         setFavorites(favoritesResponse.data);
         setItems(itemsResponse.data);
       } catch (error) {
-        alert("Ошибка при запросе данных ;(");
         console.error(error);
+        alert("Ошибка при запросе данных ;(");
       }
     }
 

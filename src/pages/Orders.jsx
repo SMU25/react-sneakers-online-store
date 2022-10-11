@@ -1,11 +1,10 @@
 import React from "react";
 import axios from "axios";
+import { AppContext } from "context";
+import { Card } from "components/Card";
+import { API_URL_ORDERS } from "constants/urls";
 
-import Card from "../components/Card";
-import AppContext from "../context";
-import { API_URL_ORDERS } from "../constants/urls";
-
-function Orders() {
+const Orders = () => {
   const { onAddToFavorite, onAddToCart } = React.useContext(AppContext);
   const [orders, setOrders] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -42,6 +41,6 @@ function Orders() {
       </div>
     </div>
   );
-}
+};
 
 export default Orders;
