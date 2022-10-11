@@ -1,13 +1,18 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router";
 import axios from "axios";
-import Drawer from "./components/Drawer";
 import Header from "./components/Header";
+import Drawer from "./components/Drawer";
 import AppContext from "./context";
 
 import Home from "./pages/Home";
 import Favorites from "./pages/Favorites";
 import Orders from "./pages/Orders";
+import {
+  API_URL_CART,
+  API_URL_FAVORITES,
+  API_URL_ITEMS,
+} from "./constants/urls";
 
 function App() {
   const [items, setItems] = React.useState([]);
@@ -20,23 +25,23 @@ function App() {
   React.useEffect(() => {
     async function fetchData() {
       try {
-        const [cartResponse, favoriteResponse, itemsResponse] =
+        const [cartResponse, favoritesResponse, itemsResponse] =
           await Promise.all([
-            axios.get("https://6342eb673f83935a784c66f4.mockapi.io/cart"),
-            axios.get("https://6342eb673f83935a784c66f4.mockapi.io/favorites"),
-            axios.get("https://6342eb673f83935a784c66f4.mockapi.io/items"),
+            axios.get(API_URL_CART),
+            axios.get(API_URL_FAVORITES),
+            axios.get(API_URL_ITEMS),
           ]);
 
         setIsLoading(false);
-
         setCartItems(cartResponse.data);
-        setFavorites(favoriteResponse.data);
+        setFavorites(favoritesResponse.data);
         setItems(itemsResponse.data);
       } catch (error) {
-        alert("Ошибка при запросе данных ;(')");
-        console.log(error);
+        alert("Ошибка при запросе данных ;(");
+        console.error(error);
       }
     }
+
     fetchData();
   }, []);
 
@@ -49,15 +54,10 @@ function App() {
         setCartItems((prev) =>
           prev.filter((item) => Number(item.parentId) !== Number(obj.id))
         );
-        await axios.delete(
-          `https://6342eb673f83935a784c66f4.mockapi.io/cart/${findItem.id}`
-        );
+        await axios.delete(`${API_URL_CART}/${findItem.id}`);
       } else {
         setCartItems((prev) => [...prev, obj]);
-        const { data } = await axios.post(
-          "https://6342eb673f83935a784c66f4.mockapi.io/cart",
-          obj
-        );
+        const { data } = await axios.post(API_URL_CART, obj);
         setCartItems((prev) =>
           prev.map((item) => {
             if (item.parentId === data.parentId) {
@@ -78,7 +78,7 @@ function App() {
 
   const onRemoveItem = (id) => {
     try {
-      axios.delete(`https://6342eb673f83935a784c66f4.mockapi.io/cart/${id}`);
+      axios.delete(`${API_URL_CART}/${id}`);
       setCartItems((prev) =>
         prev.filter((item) => Number(item.id) !== Number(id))
       );
@@ -90,22 +90,20 @@ function App() {
 
   const onAddToFavorite = async (obj) => {
     try {
-      if (favorites.find((favObj) => Number(favObj.id) !== Number(obj.id))) {
-        axios.delete(
-          `https://6342eb673f83935a784c66f4.mockapi.io/favorites/${obj.id}`
-        );
+      if (favorites.find((favObj) => Number(favObj.id) === Number(obj.id))) {
+        axios.delete(`${API_URL_FAVORITES}/${obj.id}`);
         setFavorites((prev) =>
           prev.filter((item) => Number(item.id) !== Number(obj.id))
         );
       } else {
-        const { data } = await axios.post(
-          "https://6342eb673f83935a784c66f4.mockapi.io/favorites",
-          obj
-        );
+        const { data } = await axios.post(API_URL_FAVORITES, {
+          ...obj,
+          favorited: true,
+        });
         setFavorites((prev) => [...prev, data]);
       }
     } catch (error) {
-      alert("Не удалось добавить в избранные");
+      alert("Не удалось добавить в фавориты");
       console.error(error);
     }
   };
@@ -138,6 +136,7 @@ function App() {
           onRemove={onRemoveItem}
           opened={cartOpened}
         />
+
         <Header onClickCart={() => setCartOpened(true)} />
 
         <Routes>
@@ -153,18 +152,12 @@ function App() {
                 onAddToFavorite={onAddToFavorite}
                 onAddToCart={onAddToCart}
                 isLoading={isLoading}
-              ></Home>
+              />
             }
             exact
-          ></Route>
-
-          <Route
-            path="/favorites"
-            element={<Favorites></Favorites>}
-            exact
-          ></Route>
-
-          <Route path="/orders" element={<Orders />} exact></Route>
+          />
+          <Route path="favorites" element={<Favorites />} exact />
+          <Route path="orders" element={<Orders />} exact />
         </Routes>
       </div>
     </AppContext.Provider>

@@ -1,6 +1,6 @@
 import React from "react";
+
 import Card from "../components/Card";
-// import AppContext from "../context";
 
 function Home({
   items,
@@ -11,23 +11,21 @@ function Home({
   onAddToCart,
   isLoading,
 }) {
-  // const { isItemAdded } = React.useContext(AppContext);
-
   const renderItems = () => {
-    const filteredItems = items.filter((item) =>
+    const filtredItems = items.filter((item) =>
       item.title.toLowerCase().includes(searchValue.toLowerCase())
     );
-
-    return (isLoading ? [...Array(8)] : filteredItems).map((item, index) => (
-      <Card
-        key={index}
-        onFavorite={(obj) => onAddToFavorite(obj)}
-        onPlus={(obj) => onAddToCart(obj)}
-        // added={isItemAdded(item && item.id)}
-        loading={isLoading}
-        {...item}
-      />
-    ));
+    return (isLoading ? Array.from({ length: 8 }) : filtredItems).map(
+      (item, index) => (
+        <Card
+          key={index}
+          onFavorite={(obj) => onAddToFavorite(obj)}
+          onPlus={(obj) => onAddToCart(obj)}
+          loading={isLoading}
+          {...item}
+        />
+      )
+    );
   };
 
   return (
@@ -37,14 +35,12 @@ function Home({
           {searchValue ? `Поиск по запросу: "${searchValue}"` : "Все кроссовки"}
         </h1>
         <div className="search-block d-flex">
-          <img src="/img/search.svg" alt="Search" />
+          <img src="img/search.svg" alt="Search" />
           {searchValue && (
             <img
-              onClick={() => {
-                setSearchValue("");
-              }}
+              onClick={() => setSearchValue("")}
               className="clear cu-p"
-              src="/img/btn-remove.svg"
+              src="img/btn-remove.svg"
               alt="Clear"
             />
           )}
@@ -55,9 +51,9 @@ function Home({
           />
         </div>
       </div>
-
       <div className="d-flex flex-wrap">{renderItems()}</div>
     </div>
   );
 }
+
 export default Home;

@@ -5,58 +5,53 @@ import Info from "../Info";
 import { useCart } from "../../hooks/useCart";
 
 import styles from "./Drawer.module.scss";
+import { API_URL_CART, API_URL_ORDERS } from "../../constants/urls";
 
-const delay = (ms) => {
-  new Promise((resolve) => setTimeout(resolve, ms));
-};
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function Drawer({ onClose, onRemove, items = [], opened }) {
   const { cartItems, setCartItems, totalPrice } = useCart();
-  const [orderID, setOrderID] = React.useState(null);
+  const [orderId, setOrderId] = React.useState(null);
   const [isOrderComplete, setIsOrderComplete] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-
-  // const totalPrice = cartItems.reduce((sum, obj) => obj.price + sum, 0);
+  console.log(cartItems);
 
   const onClickOrder = async () => {
     try {
       setIsLoading(true);
-      const { data } = await axios.post(
-        "https://6342eb673f83935a784c66f4.mockapi.io/orders",
-        { items: cartItems }
-      );
-
-      setOrderID(data.id);
+      const { data } = await axios.post(API_URL_ORDERS, {
+        items: cartItems,
+      });
+      setOrderId(data.id);
       setIsOrderComplete(true);
       setCartItems([]);
 
-      for (let i = 0; i < cartItems.length; i++) {
-        const item = cartItems[i];
-        axios.delete(
-          "https://6342eb673f83935a784c66f4.mockapi.io/cart/" + item.id
-        );
-        await delay(1000);
-      }
+      await cartItems.forEach((item) => {
+        axios.delete(`${API_URL_CART}/${item.id}`);
+        delay(1000);
+      });
     } catch (error) {
+      console.log(error);
       alert("Ошибка при создании заказа :(");
     }
     setIsLoading(false);
   };
+
   return (
     <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ""}`}>
       <div className={styles.drawer}>
-        <h2 className="d-flex justify-between mb-30 ">
-          Корзина
+        <h2 className="d-flex justify-between mb-30">
+          Корзина{" "}
           <img
             onClick={onClose}
-            className=" cu-p"
-            src="/img/btn-remove.svg"
+            className="cu-p"
+            src="img/btn-remove.svg"
             alt="Close"
           />
         </h2>
 
         {items.length > 0 ? (
-          <>
+          <div className="d-flex flex-column flex">
             <div className="items flex">
               {items.map((obj) => (
                 <div
@@ -73,28 +68,25 @@ function Drawer({ onClose, onRemove, items = [], opened }) {
                     <b>{obj.price} руб.</b>
                   </div>
                   <img
-                    onClick={() => {
-                      onRemove(obj.id);
-                    }}
+                    onClick={() => onRemove(obj.id)}
                     className="removeBtn"
-                    src="/img/btn-remove.svg"
+                    src="img/btn-remove.svg"
                     alt="Remove"
                   />
                 </div>
               ))}
             </div>
-
             <div className="cartTotalBlock">
               <ul>
                 <li>
                   <span>Итого:</span>
                   <div></div>
-                  <b>{totalPrice}руб.</b>
+                  <b>{totalPrice} руб. </b>
                 </li>
                 <li>
                   <span>Налог 5%:</span>
                   <div></div>
-                  <b>{((totalPrice / 100) * 5).toFixed(2)} руб.</b>
+                  <b>{(totalPrice / 100) * 5} руб. </b>
                 </li>
               </ul>
               <button
@@ -102,22 +94,20 @@ function Drawer({ onClose, onRemove, items = [], opened }) {
                 onClick={onClickOrder}
                 className="greenButton"
               >
-                Оформить заказ <img src="/img/arrow.svg" alt="Arrow" />
+                Оформить заказ <img src="img/arrow.svg" alt="Arrow" />
               </button>
             </div>
-          </>
+          </div>
         ) : (
           <Info
-            title={isOrderComplete ? "Заказ оформлен" : "Корзина пустая"}
+            title={isOrderComplete ? "Заказ оформлен!" : "Корзина пустая"}
             description={
               isOrderComplete
-                ? `Ваш заказ #${orderID} скоро будет передан курьерской доставке`
+                ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке`
                 : "Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ."
             }
             image={
-              isOrderComplete
-                ? "/img/complete-order.jpg"
-                : "/img/empty-cart.jpg"
+              isOrderComplete ? "img/complete-order.jpg" : "img/empty-cart.jpg"
             }
           />
         )}
@@ -125,4 +115,5 @@ function Drawer({ onClose, onRemove, items = [], opened }) {
     </div>
   );
 }
+
 export default Drawer;
