@@ -3,6 +3,10 @@ import axios from "axios";
 import { Info } from "components/Info";
 import { useCart } from "hooks/useCart";
 import { API_URL_CART, API_URL_ORDERS } from "constants/urls";
+import remove from "assets/btn-remove.svg";
+import arrow from "assets/arrow.svg";
+import completeOrder from "assets/complete-order.jpg";
+import emptyCart from "assets/empty-cart.jpg";
 import styles from "./Drawer.module.scss";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -39,12 +43,7 @@ export const Drawer = ({ onClose, onRemove, items = [], opened }) => {
       <div className={styles.drawer}>
         <h2 className="d-flex justify-between mb-30">
           Кошик{" "}
-          <img
-            onClick={onClose}
-            className="cu-p"
-            src="img/btn-remove.svg"
-            alt="Закрити"
-          />
+          <img onClick={onClose} className="cu-p" src={remove} alt="Закрити" />
         </h2>
 
         {items.length > 0 ? (
@@ -67,7 +66,7 @@ export const Drawer = ({ onClose, onRemove, items = [], opened }) => {
                   <img
                     onClick={() => onRemove(obj.id)}
                     className="removeBtn"
-                    src="img/btn-remove.svg"
+                    src={remove}
                     alt="Remove"
                   />
                 </div>
@@ -91,7 +90,7 @@ export const Drawer = ({ onClose, onRemove, items = [], opened }) => {
                 onClick={onClickOrder}
                 className="greenButton"
               >
-                Підтвердити замолвення! <img src="img/arrow.svg" alt="Arrow" />
+                Підтвердити замовлення! <img src={arrow} alt="Arrow" />
               </button>
             </div>
           </div>
@@ -103,9 +102,7 @@ export const Drawer = ({ onClose, onRemove, items = [], opened }) => {
                 ? `Дякуємо. Ваше замовлення #${orderId} найближчим часом буде передано до кур'єрської служби доставки.`
                 : "Додайте хоча б одну (1) пару кросівок, щоб зробити замовлення! "
             }
-            image={
-              isOrderComplete ? "img/complete-order.jpg" : "img/empty-cart.jpg"
-            }
+            image={isOrderComplete ? completeOrder : emptyCart}
           />
         )}
       </div>

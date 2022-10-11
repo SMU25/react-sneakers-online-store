@@ -1,7 +1,6 @@
 {
   "name": "react-sneakers",
   "version": "0.1.0",
-  "homepage": "https://github.com/SMU25/react-sneakers-online-store",
   "private": true,
   "engines": {
     "node": "14.20.1",

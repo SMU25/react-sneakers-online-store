@@ -1,5 +1,7 @@
 import React from "react";
 import { Card } from "components/Card";
+import remove from "assets/btn-remove.svg";
+import search from "assets/search.svg";
 
 const Home = ({
   items,
@@ -34,12 +36,12 @@ const Home = ({
           {searchValue ? `Пошук по запиті: "${searchValue}"` : "Усі кросівки"}
         </h1>
         <div className="search-block d-flex">
-          <img src="img/search.svg" alt="Search" />
+          <img src={search} alt="Search" />
           {searchValue && (
             <img
               onClick={() => setSearchValue("")}
               className="clear cu-p"
-              src="img/btn-remove.svg"
+              src={remove}
               alt="Clear"
             />
           )}

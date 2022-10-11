@@ -1,5 +1,6 @@
 import React from "react";
 import { AppContext } from "context";
+import arrow from "assets/arrow.svg";
 
 export const Info = ({ title, image, description }) => {
   const { setCartOpened } = React.useContext(AppContext);
@@ -10,7 +11,7 @@ export const Info = ({ title, image, description }) => {
       <h2>{title}</h2>
       <p className="opacity-6">{description}</p>
       <button onClick={() => setCartOpened(false)} className="greenButton">
-        <img src="img/arrow.svg" alt="Arrow" />
+        <img src={arrow} alt="Arrow" />
         <span>Повернутися назад</span>
       </button>
     </div>
