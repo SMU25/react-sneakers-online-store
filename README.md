@@ -1,4 +1,4 @@
-Deploy: [Sneakers Online Store](https://sneakers-online-store.herokuapp.com/)
+Deploy: [Sneakers - Online Store](https://sneakers-online-store.herokuapp.com/)
 
 # Getting Started with Create React App
 
