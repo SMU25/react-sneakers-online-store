@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { Route, Routes } from "react-router";
 import Home from "pages/Home";
@@ -7,12 +7,26 @@ import Orders from "pages/Orders";
 import { Header } from "components/Header";
 import { Drawer } from "components/Drawer";
 import { AppContext } from "context";
-import { API_URL_CART, API_URL_FAVORITES, API_URL_ITEMS } from "constants/urls";
+import { getItemLocalStorage } from "utils/getItemLocalStorage";
+import { setItemLocalStorage } from "utils/setItemLocalStorage";
+import { API_URL_ITEMS } from "constants/urls";
+import {
+  SNEAKERS_CART_KEY,
+  SNEAKERS_FAVORITES_KEY,
+  SNEAKERS_ORDERS_KEY,
+} from "constants/localStorage";
 
 function App() {
   const [items, setItems] = React.useState([]);
-  const [cartItems, setCartItems] = React.useState([]);
-  const [favorites, setFavorites] = React.useState([]);
+  const [cartItems, setCartItems] = React.useState(
+    getItemLocalStorage(SNEAKERS_CART_KEY)
+  );
+  const [favorites, setFavorites] = React.useState(
+    getItemLocalStorage(SNEAKERS_FAVORITES_KEY)
+  );
+  const [orders, setOrders] = React.useState(
+    getItemLocalStorage(SNEAKERS_ORDERS_KEY)
+  );
   const [searchValue, setSearchValue] = React.useState("");
   const [cartOpened, setCartOpened] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -20,17 +34,10 @@ function App() {
   React.useEffect(() => {
     async function fetchData() {
       try {
-        const [cartResponse, favoritesResponse, itemsResponse] =
-          await Promise.all([
-            axios.get(API_URL_CART),
-            axios.get(API_URL_FAVORITES),
-            axios.get(API_URL_ITEMS),
-          ]);
+        const { data } = await axios.get(API_URL_ITEMS);
 
         setIsLoading(false);
-        setCartItems(cartResponse.data);
-        setFavorites(favoritesResponse.data);
-        setItems(itemsResponse.data);
+        setItems(data);
       } catch (error) {
         console.error(error);
         alert("Помилка при запиті данних;(");
@@ -40,76 +47,57 @@ function App() {
     fetchData();
   }, []);
 
-  const onAddToCart = async (obj) => {
-    try {
-      const findItem = cartItems.find(
-        (item) => Number(item.parentId) === Number(obj.id)
+  const onAddToCart = (obj) => {
+    const findItem = cartItems.find(
+      (item) => Number(item.id) === Number(obj.id)
+    );
+
+    if (findItem) {
+      setCartItems((prev) =>
+        prev.filter((item) => Number(item.id) !== Number(obj.id))
       );
-      if (findItem) {
-        setCartItems((prev) =>
-          prev.filter((item) => Number(item.parentId) !== Number(obj.id))
-        );
-        await axios.delete(`${API_URL_CART}/${findItem.id}`);
-      } else {
-        setCartItems((prev) => [...prev, obj]);
-        const { data } = await axios.post(API_URL_CART, obj);
-        setCartItems((prev) =>
-          prev.map((item) => {
-            if (item.parentId === data.parentId) {
-              return {
-                ...item,
-                id: data.id,
-              };
-            }
-            return item;
-          })
-        );
-      }
-    } catch (error) {
-      alert("Помилка при додаванні в кошик!");
-      console.error(error);
+    } else {
+      setCartItems((prev) => [...prev, obj]);
     }
   };
 
   const onRemoveItem = (id) => {
-    try {
-      axios.delete(`${API_URL_CART}/${id}`);
-      setCartItems((prev) =>
-        prev.filter((item) => Number(item.id) !== Number(id))
-      );
-    } catch (error) {
-      alert("Помилка при видаленні з кошика!");
-      console.error(error);
-    }
+    setCartItems((prev) =>
+      prev.filter((item) => Number(item.id) !== Number(id))
+    );
   };
 
   const onAddToFavorite = async (obj) => {
-    try {
-      if (favorites.find((favObj) => Number(favObj.id) === Number(obj.id))) {
-        axios.delete(`${API_URL_FAVORITES}/${obj.id}`);
-        setFavorites((prev) =>
-          prev.filter((item) => Number(item.id) !== Number(obj.id))
-        );
-      } else {
-        const { data } = await axios.post(API_URL_FAVORITES, {
-          ...obj,
-          favorited: true,
-        });
-        setFavorites((prev) => [...prev, data]);
-      }
-    } catch (error) {
-      alert("Не вдалося додати в улюблені товари!");
-      console.error(error);
+    if (favorites.find((favObj) => Number(favObj.id) === Number(obj.id))) {
+      setFavorites((prev) =>
+        prev.filter((item) => Number(item.id) !== Number(obj.id))
+      );
+    } else {
+      setFavorites((prev) => [...prev, obj]);
     }
   };
+
+  const onAddToOrders = () =>
+    setOrders((prev) => [
+      ...prev,
+      { orderId: orders?.length + 1, items: cartItems },
+    ]);
 
   const onChangeSearchInput = (event) => {
     setSearchValue(event.target.value);
   };
 
-  const isItemAdded = (id) => {
-    return cartItems.some((obj) => Number(obj.parentId) === Number(id));
-  };
+  useEffect(() => {
+    setItemLocalStorage(cartItems, SNEAKERS_CART_KEY);
+  }, [cartItems]);
+
+  useEffect(() => {
+    setItemLocalStorage(favorites, SNEAKERS_FAVORITES_KEY);
+  }, [favorites]);
+
+  useEffect(() => {
+    setItemLocalStorage(orders, SNEAKERS_ORDERS_KEY);
+  }, [orders]);
 
   return (
     <AppContext.Provider
@@ -117,9 +105,10 @@ function App() {
         items,
         cartItems,
         favorites,
-        isItemAdded,
+        orders,
         onAddToFavorite,
         onAddToCart,
+        onAddToOrders,
         setCartOpened,
         setCartItems,
       }}
@@ -131,9 +120,7 @@ function App() {
           onRemove={onRemoveItem}
           opened={cartOpened}
         />
-
         <Header onClickCart={() => setCartOpened(true)} />
-
         <Routes>
           <Route
             path="/"

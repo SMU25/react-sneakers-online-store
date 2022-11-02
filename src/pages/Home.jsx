@@ -13,10 +13,10 @@ const Home = ({
   isLoading,
 }) => {
   const renderItems = () => {
-    const filtredItems = items.filter((item) =>
+    const filteredItems = items.filter((item) =>
       item.title.toLowerCase().includes(searchValue.toLowerCase())
     );
-    return (isLoading ? Array.from({ length: 8 }) : filtredItems).map(
+    return (isLoading ? Array.from({ length: 8 }) : filteredItems).map(
       (item, index) => (
         <Card
           key={index}

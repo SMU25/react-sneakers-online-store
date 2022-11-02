@@ -1,41 +1,33 @@
-import React from "react";
-import axios from "axios";
+import React, { useContext } from "react";
 import { Info } from "components/Info";
+import { AppContext } from "context";
 import { useCart } from "hooks/useCart";
-import { API_URL_CART, API_URL_ORDERS } from "constants/urls";
 import remove from "assets/btn-remove.svg";
 import arrow from "assets/arrow.svg";
 import completeOrder from "assets/complete-order.jpg";
 import emptyCart from "assets/empty-cart.jpg";
 import styles from "./Drawer.module.scss";
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export const Drawer = ({ onClose, onRemove, items = [], opened }) => {
-  const { cartItems, setCartItems, totalPrice } = useCart();
-  const [orderId, setOrderId] = React.useState(null);
+  const { orders, onAddToOrders } = useContext(AppContext);
+
+  const { setCartItems, totalPrice } = useCart();
+
   const [isOrderComplete, setIsOrderComplete] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const onClickOrder = async () => {
-    try {
-      setIsLoading(true);
-      const { data } = await axios.post(API_URL_ORDERS, {
-        items: cartItems,
-      });
-      setOrderId(data.id);
-      setIsOrderComplete(true);
-      setCartItems([]);
+  const orderId = orders.length;
 
-      await cartItems.forEach((item) => {
-        axios.delete(`${API_URL_CART}/${item.id}`);
-        delay(1000);
-      });
-    } catch (error) {
-      console.log(error);
-      alert("Помилка при створенні замовлення :(");
-    }
-    setIsLoading(false);
+  const onClickOrder = () => {
+    setIsLoading(true);
+
+    //simulation of loading
+    setTimeout(() => {
+      setIsOrderComplete(true);
+      onAddToOrders();
+      setCartItems([]);
+      setIsLoading(false);
+    }, 1000);
   };
 
   return (
