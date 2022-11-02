@@ -48,7 +48,7 @@ function App() {
   }, []);
 
   const onAddToCart = (obj) => {
-    const findItem = cartItems.find(
+    const findItem = cartItems?.find(
       (item) => Number(item.id) === Number(obj.id)
     );
 
@@ -68,7 +68,7 @@ function App() {
   };
 
   const onAddToFavorite = async (obj) => {
-    if (favorites.find((favObj) => Number(favObj.id) === Number(obj.id))) {
+    if (favorites?.find((favObj) => Number(favObj.id) === Number(obj.id))) {
       setFavorites((prev) =>
         prev.filter((item) => Number(item.id) !== Number(obj.id))
       );
