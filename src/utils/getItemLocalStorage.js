@@ -4,9 +4,9 @@ export const getItemLocalStorage = (key) => {
   const stringifyItem = localStorage.getItem(key);
 
   if (
+    !stringifyItem ||
     stringifyItem.includes(NULL_TYPE) ||
-    stringifyItem.includes(UNDEFINED_TYPE) ||
-    !stringifyItem
+    stringifyItem.includes(UNDEFINED_TYPE)
   ) {
     return [];
   } else {
