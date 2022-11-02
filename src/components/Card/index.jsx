@@ -1,6 +1,7 @@
 import React from "react";
 import { AppContext } from "context";
 import { ContentLoaderComponent } from "components/ContentLoader";
+import { isItemAdded } from "utils/isItemAdded";
 import liked from "assets/liked.svg";
 import unliked from "assets/unliked.svg";
 import checked from "assets/btn-checked.svg";
@@ -17,9 +18,9 @@ export const Card = ({
   favorited,
   loading = false,
 }) => {
-  const { isItemAdded } = React.useContext(AppContext);
-  const [isFavorite, setIsFavorite] = React.useState(favorited);
-  const obj = { id, parentId: id, title, imageUrl, price };
+  const { cartItems, favorites } = React.useContext(AppContext);
+
+  const obj = { id, title, imageUrl, price };
 
   const onClickPlus = () => {
     onPlus(obj);
@@ -27,7 +28,6 @@ export const Card = ({
 
   const onClickFavorite = () => {
     onFavorite(obj);
-    setIsFavorite(!isFavorite);
   };
 
   return (
@@ -39,8 +39,8 @@ export const Card = ({
           {onFavorite && (
             <div className={styles.favorite} onClick={onClickFavorite}>
               <img
-                src={isFavorite ? liked : unliked}
-                alt={isFavorite ? "Liked" : "Unliked"}
+                src={isItemAdded(favorites, id) ? liked : unliked}
+                alt={isItemAdded(favorites, id) ? "Liked" : "Unliked"}
               />
             </div>
           )}
@@ -55,8 +55,8 @@ export const Card = ({
               <img
                 className={styles.plus}
                 onClick={onClickPlus}
-                src={isItemAdded(id) ? checked : plus}
-                alt={isItemAdded(id) ? "Check" : "Plus"}
+                src={isItemAdded(cartItems, id) ? checked : plus}
+                alt={isItemAdded(cartItems, id) ? "Check" : "Plus"}
               />
             )}
           </div>
