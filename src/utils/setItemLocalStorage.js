@@ -1,2 +1,2 @@
-export const setItemLocalStorage = (item = [], key) =>
-  localStorage.setItem(key, JSON.stringify(item));
+export const setItemLocalStorage = (value = [], key) =>
+  localStorage.setItem(key, JSON.stringify(value));
